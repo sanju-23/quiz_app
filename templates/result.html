@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quiz Result</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+</head>
+<body>
+  <div class="container">
+  <h2> Quiz Completed!</h2>
+
+  <p><b>Total Questions:</b> {{ total }}</p>
+  <p><b>Correct Answers:</b> {{ correct }}</p>
+  <p><b>Your Score:</b> {{ score }}%</p>
+
+  <br>
+  <a href="/dashboard"><button>Back to Dashboard</button></a>
+</body>
+</html>

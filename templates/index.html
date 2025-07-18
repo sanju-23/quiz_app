@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard - Quiz List</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+</head>
+<body>
+  <div class="container">
+  <h2>Welcome {{ email }}</h2>
+
+  <h3>Available Quizzes:</h3>
+  <ul>
+    {% for quiz in quizzes %}
+      <li>
+        <strong>{{ quiz.title }}</strong><br>
+        {{ quiz.description }}<br>
+        <a href="/confirm/{{ quiz.id }}">Start Quiz</a>
+      </li>
+      <hr>
+    {% endfor %}
+  </ul>
+
+  <a href="/logout">Logout</a>
+</body>
+</html>

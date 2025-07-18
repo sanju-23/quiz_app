@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Take Quiz</title>
+  <style>
+    .question { display: none; margin-bottom: 20px; }
+    .question.active { display: block; }
+    .option { margin: 5px 0; }
+  </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+</head>
+<body>
+  <div class="container">
+
+  <h2> Quiz</h2>
+  <p> Time Left: <span id="timer">30</span> seconds</p>
+
+  <form id="submitForm" method="POST" action="/submit/{{ quiz_id }}">
+    {% for q in questions %}
+      <div class="question {% if loop.first %}active{% endif %}" id="q{{ loop.index0 }}">
+        <p><b>Q{{ loop.index }}:</b> {{ q.question }}</p>
+
+        <input type="hidden" name="question_ids" value="{{ q.id }}">
+
+        <div class="option">
+          <input type="radio" name="answer_{{ q.id }}" value="A"
+                onchange="saveAnswer({{ quiz_id }}, {{ q.id }}, 'A')">
+          A. {{ q['option_a'] }}
+        </div>
+
+        <div class="option">
+          <input type="radio" name="answer_{{ q.id }}" value="B"
+                onchange="saveAnswer({{ quiz_id }}, {{ q.id }}, 'B')">
+          B. {{ q['option_b'] }}
+        </div>
+
+        <div class="option">
+          <input type="radio" name="answer_{{ q.id }}" value="C"
+                onchange="saveAnswer({{ quiz_id }}, {{ q.id }}, 'C')">
+          C. {{ q['option_c'] }}
+        </div>
+
+        <div class="option">
+          <input type="radio" name="answer_{{ q.id }}" value="D"
+                onchange="saveAnswer({{ quiz_id }}, {{ q.id }}, 'D')">
+          D. {{ q['option_d'] }}
+        </div>
+
+
+        {% if not loop.last %}
+          <button type="button" onclick="nextQuestion()">Next</button>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <!-- Submit button only visible on last question -->
+    <button type="submit" id="submitBtn" style="display:none;">Submit Quiz</button>
+  </form>
+
+  <script>
+    let currentQuestion = 0;
+    const totalQuestions = {{ questions|length }};
+    let timeLeft = 30;
+    let timer;
+
+    function showQuestion(index) {
+      document.querySelectorAll('.question').forEach(q => q.classList.remove('active'));
+      document.getElementById('q' + index).classList.add('active');
+    }
+
+    function startTimer() {
+      timeLeft = 30;
+      document.getElementById('timer').innerText = timeLeft;
+
+      timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer').innerText = timeLeft;
+
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          if (currentQuestion === totalQuestions - 1) {
+            document.getElementById('submitBtn').click();  // Auto-submit
+          } else {
+            nextQuestion();
+          }
+        }
+      }, 1000);
+    }
+
+    function nextQuestion() {
+      clearInterval(timer);
+
+      // Hide current
+      document.getElementById('q' + currentQuestion).classList.remove('active');
+
+      currentQuestion++;
+
+      // Show next
+      showQuestion(currentQuestion);
+      startTimer();
+
+      // If it's the last question, show Submit button
+      if (currentQuestion === totalQuestions - 1) {
+        document.getElementById('submitBtn').style.display = 'inline';
+      }
+    }
+
+    function saveAnswer(quizId, questionId, selectedOption) {
+      fetch('/save-answer', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          quiz_id: quizId,
+          question_id: questionId,
+          selected_option: selectedOption
+        })
+      });
+    }
+
+    // Start quiz
+    window.onload = () => {
+      showQuestion(currentQuestion);
+      startTimer();
+    }
+  </script>
+
+</body>
+</html>

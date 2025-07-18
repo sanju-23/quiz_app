@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Start Quiz</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+</head>
+<body>
+  <div class="container">
+  <h2>{{ quiz.title }}</h2>
+  <p>{{ quiz.description }}</p>
+
+  <p>Once started, you'll have 30 seconds per question. Ready?</p>
+
+  <form method="GET" action="/quiz/{{ quiz.id }}">
+    <button type="submit">Start Now</button>
+  </form>
+
+  <br>
+  <a href="/">Back to Quiz List</a>
+</body>
+</html>
