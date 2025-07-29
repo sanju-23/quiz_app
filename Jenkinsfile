@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/sanju-23/quiz_app.git'
+               git branch: 'main', url: 'https://github.com/sanju-23/quiz_app.git'
             }
         }
 
