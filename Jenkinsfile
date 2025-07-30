@@ -4,7 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = "quizapp"
         CONTAINER_NAME = "quizapp"
-	ENV_PATH = "/var/lib/jenkins/.env"
+        ENV_PATH = "/home/ubuntu/quiz_app/.env"
     }
 
     stages {
@@ -34,8 +34,10 @@ pipeline {
             steps {
                 script {
                     sh """
-		    docker run -d -p 5000:5000 --env-file=${ENV_PATH} --name ${CONTAINER_NAME} ${IMAGE_NAME}:latest
-		    """
+                        docker run -d -p 5000:5000 \
+                        --env-file=${ENV_PATH} \
+                        --name ${CONTAINER_NAME} ${IMAGE_NAME}:latest
+                    """
                 }
             }
         }
