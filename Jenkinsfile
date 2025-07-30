@@ -32,7 +32,11 @@ pipeline {
         stage('Run New Container') {
             steps {
                 script {
-                    sh "docker run -d -p 5000:5000 \ --env-file /var/lib/jenkins/.env \ --name ${CONTAINER_NAME} ${IMAGE_NAME}:latest"
+                    sh """
+		    docker run -d -p 5000:5000 \ 
+		    --env-file /var/lib/jenkins/.env \ 
+		    --name ${CONTAINER_NAME} ${IMAGE_NAME}:latest
+		    """
                 }
             }
         }
